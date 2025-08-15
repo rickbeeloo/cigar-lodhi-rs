@@ -1,0 +1,14 @@
+[package]
+name = "cigar-lodhi-rs"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+pa-types = "1.0.0"
+
+[lib]
+path = "src/lib.rs"
+
+[[bin]]
+name = "cigar-lodhi-rs"
+path = "bin/main.rs"

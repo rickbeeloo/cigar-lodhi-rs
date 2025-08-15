@@ -211,4 +211,37 @@ mod tests {
         );
         assert_eq!(r3_b, compute(&cigar2, 3, 0.5));
     }
+
+    #[test]
+    fn compute_paper_cigar() {
+        let mut lodhi = Lodhi::new(3, 0.5);
+
+        let ops1: Vec<CigarOp> = vec![
+            CigarOp::Sub,
+            CigarOp::Sub,
+            CigarOp::Match,
+            CigarOp::Match,
+            CigarOp::Match,
+        ];
+        let cigar1 = Cigar::from_ops(ops1.into_iter());
+        let start_time = Instant::now();
+        let s1 = lodhi.compute(&cigar1);
+        let end_time = Instant::now();
+        println!("s1: {}", s1);
+        println!("time: {:?}", end_time.duration_since(start_time));
+
+        let ops2: Vec<CigarOp> = vec![
+            CigarOp::Match,
+            CigarOp::Sub,
+            CigarOp::Match,
+            CigarOp::Sub,
+            CigarOp::Match,
+        ];
+        let cigar2 = Cigar::from_ops(ops2.into_iter());
+        let start_time = Instant::now();
+        let s2 = lodhi.compute(&cigar2);
+        let end_time = Instant::now();
+        println!("s2: {}", s2);
+        println!("time: {:?}", end_time.duration_since(start_time));
+    }
 }

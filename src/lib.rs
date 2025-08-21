@@ -171,7 +171,7 @@ mod tests {
         let start_time = Instant::now();
         let result = compute(&cigar, 3, 0.5);
         let end_time = Instant::now();
-        println!("result: {}", result);
+        println!("result: {result}");
         println!("time: {:?}", end_time.duration_since(start_time));
         assert_eq!(result, 0.421875);
     }
@@ -227,7 +227,7 @@ mod tests {
         let start_time = Instant::now();
         let s1 = lodhi.compute(&cigar1);
         let end_time = Instant::now();
-        println!("s1: {}", s1);
+        println!("s1: {s1}");
         println!("time: {:?}", end_time.duration_since(start_time));
 
         let ops2: Vec<CigarOp> = vec![
@@ -241,7 +241,7 @@ mod tests {
         let start_time = Instant::now();
         let s2 = lodhi.compute(&cigar2);
         let end_time = Instant::now();
-        println!("s2: {}", s2);
+        println!("s2: {s2}");
         println!("time: {:?}", end_time.duration_since(start_time));
     }
 }

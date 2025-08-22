@@ -1,9 +1,5 @@
 use pa_types::cigar::*;
 
-pub fn run() {
-    println!("Hello, world!");
-}
-
 #[inline(always)]
 fn collect_match_positions(cigar: &Cigar) -> Vec<usize> {
     let mut match_positions = Vec::new();

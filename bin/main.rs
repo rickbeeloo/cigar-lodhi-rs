@@ -1,6 +1,7 @@
 use cigar_lodhi_rs::*;
 use pa_types::*;
 
+//fixme: just remove cli or take cigar as arg as quick test
 fn main() {
     let mut lodhi = Lodhi::new(3, 0.5);
     let cigar = Cigar::from_ops(

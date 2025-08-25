@@ -64,6 +64,7 @@ fn compute(cigar: &Cigar, k: usize, lambda_decay: f64) -> f64 {
     dp_prev.iter().sum::<f64>()
 }
 
+#[derive(Debug, Clone)]
 pub struct Lodhi {
     k: usize,
     lambda_decay: f64,

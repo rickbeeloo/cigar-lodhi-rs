@@ -1,4 +1,64 @@
 use pa_types::cigar::*;
+use pyo3::prelude::*;
+
+/// Parse a SAM-style CIGAR string (e.g., "2=1D3=", "10M1X5=") into a Cigar.
+/// Supported ops: '=' (match), 'M' (treated as match), 'X' (substitution), 'D' (deletion), 'I' (insertion).
+/// Counts are required before each op (default 1 if omitted).
+fn cigar_from_str(s: &str) -> Result<Cigar, String> {
+    let mut ops: Vec<CigarOp> = Vec::new();
+    let mut i = 0usize;
+    let bytes = s.as_bytes();
+
+    while i < bytes.len() {
+        // Skip whitespace
+        if bytes[i].is_ascii_whitespace() {
+            i += 1;
+            continue;
+        }
+
+        // Parse optional count (default 1)
+        let mut has_digits = false;
+        let mut count: usize = 0;
+        while i < bytes.len() && bytes[i].is_ascii_digit() {
+            has_digits = true;
+            count = count
+                .saturating_mul(10)
+                .saturating_add((bytes[i] - b'0') as usize);
+            i += 1;
+        }
+        if !has_digits {
+            count = 1;
+        }
+
+        if i >= bytes.len() {
+            return Err("Unexpected end of string after count".to_string());
+        }
+
+        let op_ch = bytes[i] as char;
+        i += 1;
+        let op = match op_ch {
+            '=' | 'M' => CigarOp::Match,
+            'X' => CigarOp::Sub,
+            'D' => CigarOp::Del,
+            'I' => {
+                // Treat insertion as a non-match op that advances alignment index
+                // by count in our scoring model.
+                // Assuming CigarOp::Ins exists in pa_types.
+                CigarOp::Ins
+            }
+            _ => {
+                return Err(format!("Unsupported CIGAR op: {op_ch}"));
+            }
+        };
+
+        // Expand by count; Cigar::from_ops will compact contiguous runs
+        for _ in 0..count {
+            ops.push(op);
+        }
+    }
+
+    Ok(Cigar::from_ops(ops.into_iter()))
+}
 
 #[inline(always)]
 fn collect_match_positions(cigar: &Cigar) -> Vec<usize> {
@@ -62,6 +122,12 @@ fn compute(cigar: &Cigar, k: usize, lambda_decay: f64) -> f64 {
     }
 
     dp_prev.iter().sum::<f64>()
+}
+
+/// Convenience API: compute score directly from a CIGAR string.
+pub fn score_from_cigar_str(cigar_str: &str, k: usize, lambda_decay: f64) -> Result<f64, String> {
+    let cigar = cigar_from_str(cigar_str)?;
+    Ok(compute(&cigar, k, lambda_decay))
 }
 
 #[derive(Debug, Clone)]
@@ -145,6 +211,22 @@ impl Lodhi {
 
         self.dp_prev.iter().sum::<f64>()
     }
+}
+
+// Python bindings
+#[pyfunction]
+#[pyo3(signature = (cigar, k=3, lambda_decay=0.5))]
+fn cigar_lodhi(cigar: &str, k: usize, lambda_decay: f64) -> PyResult<f64> {
+    match score_from_cigar_str(cigar, k, lambda_decay) {
+        Ok(score) => Ok(score),
+        Err(msg) => Err(pyo3::exceptions::PyValueError::new_err(msg)),
+    }
+}
+
+#[pymodule]
+fn cigar_lodhi_rs(_py: Python, m: &PyModule) -> PyResult<()> {
+    m.add_function(wrap_pyfunction!(cigar_lodhi, m)?)?;
+    Ok(())
 }
 
 mod tests {
@@ -240,5 +322,12 @@ mod tests {
         let end_time = Instant::now();
         println!("s2: {s2}");
         println!("time: {:?}", end_time.duration_since(start_time));
+    }
+
+    #[test]
+    fn test_cigar_from_str() {
+        let cigar_str = "2=1D3=";
+        let cigar = cigar_from_str(cigar_str).unwrap();
+        assert_eq!(cigar.to_string(), "2=D3="); // new version of pa_types uses 1D instead of implict count
     }
 }

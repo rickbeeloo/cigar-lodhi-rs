@@ -5,9 +5,12 @@ edition = "2024"
 
 [dependencies]
 pa-types = "1.0.0"
+pyo3 = { version = "0.21", features = ["extension-module"] }
 
 [lib]
+name = "cigar_lodhi_rs"
 path = "src/lib.rs"
+crate-type = ["cdylib", "rlib"]
 
 [[bin]]
 name = "cigar-lodhi-rs"

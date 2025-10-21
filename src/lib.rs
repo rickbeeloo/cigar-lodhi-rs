@@ -1,6 +1,6 @@
 use pa_types::cigar::*;
-use pyo3::prelude::*;
-use pyo3::types::PyBytes;
+// use pyo3::prelude::*;
+// use pyo3::types::PyBytes;
 
 /// Parse a SAM-style CIGAR string (e.g., "2=1D3=", "10M1X5=") into a Cigar.
 /// Supported ops: '=' (match), 'M' (treated as match), 'X' (substitution), 'D' (deletion), 'I' (insertion).
@@ -214,25 +214,25 @@ impl Lodhi {
     }
 }
 
-// Python bindings
-#[pyfunction]
-#[pyo3(signature = (cigar, k=3, lambda_decay=0.5))]
-fn cigar_lodhi(cigar: &Bound<'_, PyBytes>, k: usize, lambda_decay: f64) -> PyResult<f64> {
-    let cigar_str = std::str::from_utf8(cigar.as_bytes()).map_err(|e| {
-        pyo3::exceptions::PyValueError::new_err(format!("Invalid UTF-8 in CIGAR string: {}", e))
-    })?;
+// // Python bindings
+// #[pyfunction]
+// #[pyo3(signature = (cigar, k=3, lambda_decay=0.5))]
+// fn cigar_lodhi(cigar: &Bound<'_, PyBytes>, k: usize, lambda_decay: f64) -> PyResult<f64> {
+//     let cigar_str = std::str::from_utf8(cigar.as_bytes()).map_err(|e| {
+//         pyo3::exceptions::PyValueError::new_err(format!("Invalid UTF-8 in CIGAR string: {}", e))
+//     })?;
 
-    match score_from_cigar_str(cigar_str, k, lambda_decay) {
-        Ok(score) => Ok(score),
-        Err(msg) => Err(pyo3::exceptions::PyValueError::new_err(msg)),
-    }
-}
+//     match score_from_cigar_str(cigar_str, k, lambda_decay) {
+//         Ok(score) => Ok(score),
+//         Err(msg) => Err(pyo3::exceptions::PyValueError::new_err(msg)),
+//     }
+// }
 
-#[pymodule]
-fn libcigar_lodhi_rs(_py: Python, m: &Bound<PyModule>) -> PyResult<()> {
-    m.add_function(wrap_pyfunction!(cigar_lodhi, m)?)?;
-    Ok(())
-}
+// #[pymodule]
+// fn libcigar_lodhi_rs(_py: Python, m: &Bound<PyModule>) -> PyResult<()> {
+//     m.add_function(wrap_pyfunction!(cigar_lodhi, m)?)?;
+//     Ok(())
+// }
 
 #[cfg(test)]
 mod tests {

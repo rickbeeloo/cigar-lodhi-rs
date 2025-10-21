@@ -5,7 +5,7 @@ edition = "2024"
 
 [dependencies]
 pa-types = "1.0.0"
-pyo3 = { version = "0.21", features = ["extension-module"] }
+# pyo3 = { version = "0.21", features = ["extension-module"] }
 
 [lib]
 name = "cigar_lodhi_rs"

@@ -334,6 +334,6 @@ mod tests {
     fn test_cigar_from_str() {
         let cigar_str = "2=1D3=";
         let cigar = cigar_from_str(cigar_str).unwrap();
-        assert_eq!(cigar.to_string(), "2=D3="); // new version of pa_types uses 1D instead of implict count
+        assert_eq!(cigar.to_string(), "2=1D3="); // new version of pa_types uses 1D instead of implict count
     }
 }

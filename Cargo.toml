@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-pa-types = "1.0.0"
+pa-types.git = "https://github.com/pairwise-alignment/pa-types"
 # pyo3 = { version = "0.21", features = ["extension-module"] }
 
 [lib]

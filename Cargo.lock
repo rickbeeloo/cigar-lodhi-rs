@@ -47,7 +47,8 @@ dependencies = [
 [[package]]
 name = "pa-types"
 version = "1.2.0"
-source = "git+https://github.com/pairwise-alignment/pa-types#c878261b883c6385b9b721374d3b7d9962a01edf"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "dce74cc17b677d21e674bc9058928144c9c001b7bd95c487fbb52554667d6fb0"
 dependencies = [
  "derive_more",
  "itertools",

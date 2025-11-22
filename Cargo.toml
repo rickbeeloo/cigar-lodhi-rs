@@ -1,16 +1,22 @@
 [package]
 name = "cigar-lodhi-rs"
 version = "0.1.0"
-edition = "2024"
+edition = "2021"
+authors = ["rick beeloo"]
+description = "Lodhi subsequence kernel on CIGAR strings"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/rickbeeloo/cigar-lodhi-rs"
+readme = "README.md"
+keywords = ["cigar", "lodhi", "string-kernel", "bioinformatics", "alignment", "sequence"]
+categories = ["algorithms", "science::bioinformatics"]
 
 [dependencies]
 pa-types = "1.2.0"
-# pyo3 = { version = "0.21", features = ["extension-module"] }
 
 [lib]
 name = "cigar_lodhi_rs"
 path = "src/lib.rs"
-crate-type = ["cdylib", "rlib"]
+# crate-type = ["cdylib", "rlib"]
 
 [[bin]]
 name = "cigar-lodhi-rs"

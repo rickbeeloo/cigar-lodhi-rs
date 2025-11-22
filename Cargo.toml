@@ -7,7 +7,7 @@ description = "Lodhi subsequence kernel on CIGAR strings"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/rickbeeloo/cigar-lodhi-rs"
 readme = "README.md"
-keywords = ["cigar", "lodhi", "string-kernel", "bioinformatics", "alignment", "sequence"]
+keywords = ["cigar", "lodhi", "bioinformatics", "dna"]
 categories = ["algorithms", "science::bioinformatics"]
 
 [dependencies]
